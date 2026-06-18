@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cycle-Synced Strength &mdash; Train With Your Phase, Not Against It</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F7F5F1;
+    --paper-raised:#FFFFFF;
+    --ink:#241F1C;
+    --ink-soft:#5B5450;
+    --line:#DCD4C8;
+    --line-soft:#E8E2D8;
+
+    --period:#B5564B;
+    --period-tint:#F3E1DD;
+    --period-deep:#7E342B;
+
+    --follicular:#5C7A6B;
+    --follicular-tint:#E2EAE4;
+    --follicular-deep:#3C5347;
+
+    --power:#B8862E;
+    --power-tint:#F6EAD2;
+    --power-deep:#7E5A16;
+
+    --balance:#6B5B7A;
+    --balance-tint:#E9E3EE;
+    --balance-deep:#473A54;
+
+    --serif: 'Source Serif 4', Georgia, serif;
+    --sans: 'Inter', -apple-system, sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+  }
+  img,svg{display:block;max-width:100%;}
+  a{color:inherit;}
+
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px;}
+
+  /* ===== Top bar ===== */
+  .topbar{
+    border-bottom:1px solid var(--line);
+    background:var(--paper);
+    position:sticky;top:0;z-index:50;
+  }
+  .topbar-inner{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 28px;max-width:1080px;margin:0 auto;
+  }
+  .brand{
+    display:flex;align-items:baseline;gap:10px;
+    font-family:var(--serif);font-weight:600;font-size:19px;letter-spacing:.2px;
+  }
+  .brand .rx{
+    font-family:var(--mono);font-size:11px;color:var(--ink-soft);
+    border:1px solid var(--line);padding:2px 7px;border-radius:3px;letter-spacing:.5px;
+  }
+  .nav{display:flex;gap:28px;font-size:14px;}
+  .nav a{text-decoration:none;color:var(--ink-soft);border-bottom:1px solid transparent;padding-bottom:2px;transition:color .15s, border-color .15s;}
+  .nav a:hover{color:var(--ink);border-color:var(--ink);}
+  .nav-cta{
+    background:var(--ink);color:var(--paper);padding:9px 16px;border-radius:3px;
+    font-size:13.5px;font-weight:600;text-decoration:none;
+  }
+  @media (max-width:760px){ .nav{display:none;} }
+
+  /* ===== Hero ===== */
+  .hero{
+    padding:64px 0 40px;
+    border-bottom:1px solid var(--line);
+  }
+  .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;}
+  @media (max-width:880px){ .hero-grid{grid-template-columns:1fr;gap:36px;} }
+
+  .eyebrow{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:1.4px;text-transform:uppercase;
+    color:var(--ink-soft);margin:0 0 14px;display:flex;align-items:center;gap:8px;
+  }
+  .eyebrow::before{content:'';width:18px;height:1px;background:var(--ink-soft);display:inline-block;}
+
+  h1{
+    font-family:var(--serif);font-weight:600;font-size:44px;line-height:1.08;
+    margin:0 0 18px;letter-spacing:-.3px;
+  }
+  h1 em{font-style:italic;color:var(--period-deep);}
+  .lede{font-size:16.5px;color:var(--ink-soft);max-width:480px;margin:0 0 26px;}
+
+  .hero-actions{display:flex;gap:12px;flex-wrap:wrap;}
+  .btn{
+    font-family:var(--sans);font-weight:600;font-size:14.5px;
+    padding:13px 22px;border-radius:3px;text-decoration:none;
+    display:inline-flex;align-items:center;gap:8px;border:1px solid transparent;
+  }
+  .btn-primary{background:var(--ink);color:var(--paper);}
+  .btn-primary:hover{background:var(--period-deep);}
+  .btn-ghost{border-color:var(--line);color:var(--ink);}
+  .btn-ghost:hover{border-color:var(--ink);}
+
+  .hero-note{
+    margin-top:22px;font-size:12.5px;color:var(--ink-soft);
+    border-left:2px solid var(--period);padding-left:12px;max-width:440px;
+  }
+
+  /* hero mini wheel preview */
+  .mini-wheel-card{
+    background:var(--paper-raised);border:1px solid var(--line);border-radius:6px;
+    padding:22px;
+  }
+  .mini-wheel-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;}
+  .mini-wheel-head .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.6px;color:var(--ink-soft);text-transform:uppercase;}
+  .mini-wheel-head .day{font-family:var(--mono);font-size:13px;font-weight:600;}
+
+  /* ===== Section shared ===== */
+  section{padding:72px 0;}
+  .section-head{margin-bottom:36px;max-width:620px;}
+  .kicker{
+    font-family:var(--mono);font-size:11px;letter-spacing:1.4px;text-transform:uppercase;
+    color:var(--ink-soft);margin:0 0 10px;
+  }
+  h2{font-family:var(--serif);font-weight:600;font-size:30px;margin:0 0 12px;letter-spacing:-.2px;}
+  .section-sub{color:var(--ink-soft);font-size:15px;}
+
+  /* ===== Tracker section ===== */
+  .tracker{background:var(--paper-raised);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .tracker-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;}
+  @media (max-width:880px){ .tracker-grid{grid-template-columns:1fr;gap:40px;} }
+
+  .field-group{margin-bottom:20px;}
+  label{display:block;font-size:13px;font-weight:600;margin-bottom:7px;}
+  label .hint{font-weight:400;color:var(--ink-soft);font-size:12px;}
+  input[type="date"], input[type="number"]{
+    width:100%;font-family:var(--mono);font-size:15px;padding:11px 12px;
+    border:1px solid var(--line);border-radius:3px;background:var(--paper);color:var(--ink);
+  }
+  input:focus, button:focus, a:focus{outline:2px solid var(--power-deep);outline-offset:2px;}
+  .range-row{display:flex;align-items:center;gap:14px;}
+  .range-row input[type="range"]{flex:1;accent-color:var(--ink);}
+  .range-row .range-val{font-family:var(--mono);font-size:14px;font-weight:600;min-width:64px;text-align:right;}
+
+  .calc-btn{
+    width:100%;background:var(--ink);color:var(--paper);border:none;border-radius:3px;
+    padding:14px;font-family:var(--sans);font-weight:600;font-size:14.5px;cursor:pointer;margin-top:6px;
+  }
+  .calc-btn:hover{background:var(--period-deep);}
+
+  .disclaimer-box{
+    margin-top:22px;padding:14px 16px;background:var(--paper);border:1px solid var(--line);
+    border-radius:4px;font-size:12.5px;color:var(--ink-soft);line-height:1.55;
+  }
+  .disclaimer-box b{color:var(--ink);}
+
+  /* result card */
+  .result-card{
+    border:1px solid var(--line);border-radius:6px;padding:22px;background:var(--paper);
+    display:none;
+  }
+  .result-card.active{display:block;}
+  .result-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+  .result-phase-name{font-family:var(--serif);font-size:24px;font-weight:600;}
+  .result-day{font-family:var(--mono);font-size:13px;color:var(--ink-soft);}
+  .result-tag{
+    display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.5px;
+    text-transform:uppercase;padding:4px 9px;border-radius:3px;margin-bottom:14px;
+  }
+  .result-desc{font-size:14.5px;color:var(--ink-soft);margin-bottom:16px;}
+  .result-bars{display:flex;flex-direction:column;gap:9px;margin-bottom:18px;}
+  .bar-row{display:grid;grid-template-columns:90px 1fr;align-items:center;gap:10px;}
+  .bar-row .bar-label{font-size:12px;color:var(--ink-soft);}
+  .bar-track{height:7px;background:var(--line-soft);border-radius:4px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:4px;}
+  .result-action{
+    display:flex;align-items:center;justify-content:space-between;
+    border-top:1px solid var(--line);padding-top:14px;font-size:13.5px;
+  }
+  .result-action a{font-weight:600;text-decoration:none;border-bottom:1.5px solid currentColor;}
+
+  .upcoming-card{
+    margin-top:18px;border:1px solid var(--line);border-radius:6px;padding:18px 20px;background:var(--paper-raised);
+  }
+  .upcoming-head{font-family:var(--mono);font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--ink-soft);margin:0 0 12px;}
+  .upcoming-list{display:flex;flex-direction:column;gap:0;}
+  .upcoming-row{
+    display:grid;grid-template-columns:84px 78px 1fr auto;gap:12px;align-items:center;
+    padding:10px 0;border-bottom:1px solid var(--line-soft);font-size:13px;
+  }
+  .upcoming-row:last-child{border-bottom:none;}
+  .upcoming-row .u-date{font-family:var(--mono);font-size:12px;color:var(--ink-soft);}
+  .upcoming-row .u-day{font-weight:600;}
+  .upcoming-row .u-workout{color:var(--ink-soft);}
+  .upcoming-row .u-tag{
+    font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.4px;
+    padding:3px 8px;border-radius:3px;white-space:nowrap;
+  }
+  .upcoming-row.is-today{background:var(--paper);margin:0 -10px;padding:10px 10px;border-radius:4px;}
+  .upcoming-row.is-today .u-day::after{content:' \2014 today';font-weight:400;color:var(--ink-soft);font-size:11px;}
+
+  /* ===== Wheel ===== */
+  .wheel-section{padding:80px 0;}
+  .wheel-layout{display:grid;grid-template-columns:420px 1fr;gap:56px;align-items:center;}
+  @media (max-width:920px){ .wheel-layout{grid-template-columns:1fr;} }
+
+  .wheel-stage{position:relative;width:100%;max-width:420px;margin:0 auto;}
+  .wheel-center-label{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    text-align:center;width:160px;
+  }
+  .wheel-center-label .cl-phase{font-family:var(--serif);font-weight:600;font-size:21px;display:block;margin-bottom:2px;}
+  .wheel-center-label .cl-day{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);display:block;}
+
+  .legend-list{display:flex;flex-direction:column;gap:18px;}
+  .legend-item{display:grid;grid-template-columns:14px 1fr;gap:14px;align-items:start;}
+  .legend-dot{width:14px;height:14px;border-radius:50%;margin-top:4px;}
+  .legend-item h4{margin:0 0 4px;font-size:15.5px;font-weight:700;}
+  .legend-item p{margin:0;font-size:13.5px;color:var(--ink-soft);}
+  .legend-item .legend-days{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);}
+
+  /* ===== Phase cards ===== */
+  .phase-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  @media (max-width:880px){ .phase-cards{grid-template-columns:1fr;} }
+  .phase-card{
+    border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--paper-raised);
+    display:flex;flex-direction:column;
+  }
+  .phase-card-head{padding:20px 22px;color:#fff;}
+  .phase-card-head .pc-eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:1px;text-transform:uppercase;opacity:.85;margin-bottom:6px;}
+  .phase-card-head h3{font-family:var(--serif);font-size:22px;margin:0 0 4px;font-weight:600;}
+  .phase-card-head .pc-window{font-family:var(--mono);font-size:12px;opacity:.9;}
+  .phase-card-body{padding:20px 22px;flex:1;display:flex;flex-direction:column;gap:14px;}
+  .pc-stat{display:flex;justify-content:space-between;font-size:13px;border-bottom:1px solid var(--line-soft);padding-bottom:9px;}
+  .pc-stat span:first-child{color:var(--ink-soft);}
+  .pc-stat span:last-child{font-weight:600;text-align:right;}
+  .pc-list{margin:0;padding:0;list-style:none;font-size:13.5px;color:var(--ink-soft);display:flex;flex-direction:column;gap:7px;}
+  .pc-list li{padding-left:14px;position:relative;}
+  .pc-list li::before{content:'\2014';position:absolute;left:0;font-size:11px;top:1px;}
+  .pc-card-foot{padding:16px 22px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-soft);}
+
+  /* ===== Detailed schedule ===== */
+  .schedule-tabs{display:flex;gap:8px;margin-bottom:32px;flex-wrap:wrap;}
+  .schedule-tab{
+    font-family:var(--sans);font-weight:600;font-size:13.5px;padding:10px 18px;
+    border-radius:20px;border:1px solid var(--line);background:var(--paper-raised);
+    cursor:pointer;color:var(--ink-soft);transition:all .15s;
+  }
+  .schedule-tab:hover{border-color:var(--ink);color:var(--ink);}
+  .schedule-tab.active{color:#fff;border-color:transparent;}
+
+  .schedule-panel{display:none;}
+  .schedule-panel.active{display:block;}
+
+  .day-block{
+    border:1px solid var(--line);border-radius:6px;margin-bottom:20px;overflow:hidden;background:var(--paper-raised);
+  }
+  .day-block-head{
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
+    padding:16px 20px;color:#fff;
+  }
+  .day-block-head .dh-left{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+  .day-block-head h4{font-family:var(--serif);font-size:18px;margin:0;font-weight:600;}
+  .day-block-head .dh-focus{font-size:13.5px;opacity:.92;}
+  .day-block-head .dh-time{font-family:var(--mono);font-size:12px;opacity:.9;white-space:nowrap;}
+
+  .warmup-strip{
+    background:var(--paper);padding:14px 20px;border-bottom:1px solid var(--line);
+  }
+  .warmup-strip .ws-label{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.7px;text-transform:uppercase;
+    color:var(--ink-soft);margin-bottom:9px;
+  }
+  .warmup-grid{display:flex;flex-direction:column;gap:6px;}
+  .warmup-row{
+    display:grid;grid-template-columns:1fr 100px 1fr;gap:10px;font-size:12.5px;
+    padding:5px 0;color:var(--ink-soft);
+  }
+  .warmup-row span:first-child{color:var(--ink);font-weight:500;}
+  .warmup-row .wr-time{font-family:var(--mono);font-size:11.5px;}
+
+  .ex-table{width:100%;border-collapse:collapse;font-size:13px;}
+  .ex-table thead th{
+    text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;
+    color:var(--ink-soft);padding:10px 20px;border-bottom:1px solid var(--line);font-weight:600;
+  }
+  .ex-table tbody td{padding:11px 20px;border-bottom:1px solid var(--line-soft);}
+  .ex-table tbody tr:last-child td{border-bottom:none;}
+  .ex-table tbody td:first-child{font-weight:600;}
+  .ex-table tbody td:not(:first-child){color:var(--ink-soft);font-family:var(--mono);font-size:12px;}
+
+  .day-block-foot{padding:13px 20px;font-size:12px;color:var(--ink-soft);font-style:italic;border-top:1px solid var(--line);}
+
+  .rest-strip{
+    display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 28px;
+  }
+  .rest-pill{
+    font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);
+    border:1px dashed var(--line);border-radius:20px;padding:7px 14px;
+  }
+  .rest-pill b{color:var(--ink);}
+
+  @media (max-width:600px){
+    .warmup-row, .ex-table thead th:nth-child(3), .ex-table tbody td:nth-child(3){
+      font-size:12px;
+    }
+    .ex-table{font-size:12px;}
+    .ex-table thead th, .ex-table tbody td{padding:9px 14px;}
+  }
+
+  /* ===== Why panel ===== */
+  .why-panel{background:var(--ink);color:var(--paper);}
+  .why-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;}
+  @media (max-width:880px){ .why-grid{grid-template-columns:1fr;} }
+  .why-panel h2{color:var(--paper);}
+  .why-panel .kicker{color:#B8AFA4;}
+  .why-panel .section-sub{color:#C9C0B4;}
+  .why-list{display:flex;flex-direction:column;gap:22px;margin-top:8px;}
+  .why-item{display:grid;grid-template-columns:34px 1fr;gap:14px;}
+  .why-num{font-family:var(--mono);font-size:13px;color:#8A8178;padding-top:2px;}
+  .why-item h4{margin:0 0 5px;font-size:15px;font-weight:600;}
+  .why-item p{margin:0;font-size:13.5px;color:#C9C0B4;line-height:1.6;}
+  .citebox{
+    border:1px solid #45403A;border-radius:5px;padding:16px 18px;font-size:12.5px;
+    color:#B8AFA4;line-height:1.6;margin-top:24px;
+  }
+
+  /* ===== Quote / clinical note ===== */
+  .clinical-note{padding:56px 0;text-align:center;}
+  .clinical-note blockquote{
+    font-family:var(--serif);font-size:22px;line-height:1.5;max-width:680px;margin:0 auto 14px;
+    font-weight:500;font-style:italic;
+  }
+  .clinical-note cite{font-family:var(--mono);font-size:12px;color:var(--ink-soft);font-style:normal;}
+
+  /* ===== Download / CTA ===== */
+  .cta-band{background:var(--period-tint);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .cta-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:48px 0;}
+  .cta-inner h3{font-family:var(--serif);font-size:24px;margin:0 0 6px;}
+  .cta-inner p{margin:0;color:var(--ink-soft);font-size:14px;max-width:420px;}
+
+  /* ===== Footer ===== */
+  footer{padding:40px 0 50px;}
+  .foot-grid{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:13px;color:var(--ink-soft);}
+  .foot-disclaimer{
+    margin-top:28px;padding-top:22px;border-top:1px solid var(--line);
+    font-size:12px;color:var(--ink-soft);line-height:1.7;max-width:760px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ TOP BAR ============ -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">Cycle&amp;Strength <span class="rx">Rx</span></div>
+    <nav class="nav">
+      <a href="#tracker">Track my phase</a>
+      <a href="#wheel">The cycle wheel</a>
+      <a href="#phases">Training phases</a>
+      <a href="#schedule">Workouts &amp; warm-ups</a>
+      <a href="#why">Why this works</a>
+    </nav>
+    <a href="#tracker" class="nav-cta">Find today's phase</a>
+  </div>
+</div>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">Train with your body, not against it</p>
+      <h1>Your hormones change all month.<br>Your <em>workouts</em> should too.</h1>
+      <p class="lede">If you train the same way every single day, you're not getting the best results. Your energy, strength, and recovery change throughout your cycle. Enter your last period date below and we'll show you exactly what kind of training fits today.</p>
+      <div class="hero-actions">
+        <a href="#tracker" class="btn btn-primary">Check today's phase &rarr;</a>
+        <a href="#phases" class="btn btn-ghost">See the three training phases</a>
+      </div>
+      <p class="hero-note">This is a general guide based on an average cycle. Every woman's body is a little different, so use this as a helpful starting point, not a strict rule.</p>
+    </div>
+
+    <div class="mini-wheel-card">
+      <div class="mini-wheel-head">
+        <span class="lbl">Live preview</span>
+        <span class="day" id="heroMiniDay">Day &mdash;</span>
+      </div>
+      <svg id="heroMiniWheel" viewBox="0 0 240 240" width="100%"></svg>
+    </div>
+  </div>
+</header>
+
+<!-- ============ TRACKER ============ -->
+<section class="tracker" id="tracker">
+  <div class="wrap tracker-grid">
+    <div>
+      <p class="kicker">Step 01 &middot; Phase calculator</p>
+      <h2>Where are you in your cycle today?</h2>
+      <p class="section-sub" style="margin-bottom:28px;">Two numbers are enough to estimate today's phase: the first day of your last period, and your typical cycle length.</p>
+
+      <div class="field-group">
+        <label for="lastPeriod">First day of your last period <span class="hint">&mdash; required</span></label>
+        <input type="date" id="lastPeriod">
+      </div>
+
+      <div class="field-group">
+        <label for="cycleLength">Average cycle length <span class="hint">&mdash; most women are between 21&ndash;35 days; 28 is average</span></label>
+        <div class="range-row">
+          <input type="range" id="cycleLength" min="21" max="35" value="28">
+          <span class="range-val"><span id="cycleLengthVal">28</span> days</span>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label for="periodLength">Period (bleed) length <span class="hint">&mdash; typically 3&ndash;7 days</span></label>
+        <div class="range-row">
+          <input type="range" id="periodLength" min="2" max="8" value="5">
+          <span class="range-val"><span id="periodLengthVal">5</span> days</span>
+        </div>
+      </div>
+
+      <button class="calc-btn" id="calcBtn">Calculate my phase</button>
+
+      <div class="disclaimer-box">
+        <b>How this works:</b> we estimate that ovulation happens about 14 days before your next period starts. This is a common, simple way to estimate your cycle. If your periods are irregular, very short, very long, or you're not getting periods at all, this estimate may not be accurate for you. Talk to your doctor about your specific cycle.
+      </div>
+    </div>
+
+    <div>
+      <p class="kicker">Result</p>
+      <div class="result-card" id="resultCard">
+        <div class="result-top">
+          <span class="result-phase-name" id="resPhaseName">&mdash;</span>
+          <span class="result-day" id="resCycleDay">Cycle day &mdash;</span>
+        </div>
+        <span class="result-tag" id="resTag">&mdash;</span>
+        <p class="result-desc" id="resDesc">Enter your dates to see today's phase.</p>
+
+        <div class="result-bars">
+          <div class="bar-row">
+            <span class="bar-label">Estrogen</span>
+            <div class="bar-track"><div class="bar-fill" id="barEstrogen" style="width:0%;background:var(--period);"></div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Progesterone</span>
+            <div class="bar-track"><div class="bar-fill" id="barProgesterone" style="width:0%;background:var(--balance);"></div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Typical energy</span>
+            <div class="bar-track"><div class="bar-fill" id="barEnergy" style="width:0%;background:var(--power);"></div></div>
+          </div>
+        </div>
+
+        <div class="result-action">
+          <span id="resTrainingPhase">Training phase: &mdash;</span>
+          <a href="#schedule" id="resLink">View this phase's plan</a>
+        </div>
+      </div>
+
+      <div class="upcoming-card" id="upcomingCard">
+        <p class="upcoming-head">Your next 7 days</p>
+        <div id="upcomingList" class="upcoming-list"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHEEL ============ -->
+<section class="wheel-section" id="wheel">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">Your cycle, shown simply</p>
+      <h2>Your cycle is a circle, not a checklist</h2>
+      <p class="section-sub">Most apps show your cycle as a straight line, like it has a finish line. It doesn't &mdash; it loops back around every month. This wheel shows the four stages your body goes through, and which training phase each one matches.</p>
+    </div>
+
+    <div class="wheel-layout">
+      <div class="wheel-stage">
+        <svg id="mainWheel" viewBox="0 0 420 420" width="100%"></svg>
+      </div>
+
+      <div class="legend-list">
+        <div class="legend-item">
+          <span class="legend-dot" style="background:var(--period);"></span>
+          <div>
+            <h4>Period <span class="legend-days">&middot; days 1&ndash;5</span></h4>
+            <p>Your hormones are at their lowest point right now. This is when your <b>Period training phase</b> kicks in &mdash; light movement only, and it's okay to skip it.</p>
+          </div>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:var(--follicular);"></span>
+          <div>
+            <h4>Building up <span class="legend-days">&middot; days 6&ndash;13</span></h4>
+            <p>Your energy starts climbing day by day. This is the lead-up to your <b>Power training phase</b>, as your body gets ready for its strongest days.</p>
+          </div>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:var(--power);"></span>
+          <div>
+            <h4>Peak energy <span class="legend-days">&middot; ~day 14</span></h4>
+            <p>This is usually when you feel strongest and most confident. It's the heart of the <b>Power training phase</b> &mdash; the best time for heavy lifts and pushing yourself.</p>
+          </div>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:var(--balance);"></span>
+          <div>
+            <h4>Winding down <span class="legend-days">&middot; days 15&ndash;28</span></h4>
+            <p>Your energy can feel up and down here, and PMS symptoms may show up near the end. This is the <b>Balance training phase</b> &mdash; lighter loads, more recovery, no new personal records.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PHASE CARDS ============ -->
+<section id="phases" style="background:var(--paper-raised);border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">Step 02 &middot; Your training plan</p>
+      <h2>Three simple phases to train by</h2>
+      <p class="section-sub">Each phase is named for what your body can handle, not for a specific date. Use the calculator above to see which one you're in today.</p>
+    </div>
+
+    <div class="phase-cards">
+      <div class="phase-card">
+        <div class="phase-card-head" style="background:var(--period-deep);">
+          <div class="pc-eyebrow">Phase 01</div>
+          <h3>Period</h3>
+          <div class="pc-window">Days 1&ndash;5 &middot; on your period</div>
+        </div>
+        <div class="phase-card-body">
+          <div class="pc-stat"><span>How you'll feel</span><span>Low energy</span></div>
+          <div class="pc-stat"><span>Goal</span><span>Stay gently active</span></div>
+          <div class="pc-stat"><span>Strength days</span><span>1, and it's optional</span></div>
+          <ul class="pc-list">
+            <li>Light bands and bodyweight moves &mdash; shoulder circles, rows, glute bridges</li>
+            <li>Walking, easy yoga, and stretching fill the rest of the week</li>
+            <li>Skip the whole day if cramps are bad &mdash; that's totally fine</li>
+          </ul>
+        </div>
+        <div class="pc-card-foot">Skip: heavy squats, deadlifts, hard cardio, and pushing for new max weights.</div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-card-head" style="background:var(--power-deep);">
+          <div class="pc-eyebrow">Phase 02</div>
+          <h3>Power</h3>
+          <div class="pc-window">Days 6&ndash;14 &middot; energy is climbing</div>
+        </div>
+        <div class="phase-card-body">
+          <div class="pc-stat"><span>How you'll feel</span><span>Strong, high energy</span></div>
+          <div class="pc-stat"><span>Goal</span><span>Lift heavy, push hard</span></div>
+          <div class="pc-stat"><span>Strength days</span><span>4 &middot; Mon / Tue / Thu / Fri</span></div>
+          <ul class="pc-list">
+            <li>Your heaviest lifts of the month: squats, deadlifts, presses</li>
+            <li>The best time to try new, heavier weights</li>
+            <li>Always warm up fully before lifting &mdash; this matters even more right now</li>
+          </ul>
+        </div>
+        <div class="pc-card-foot">Rule: good form first, always &mdash; even on your strongest days.</div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-card-head" style="background:var(--balance-deep);">
+          <div class="pc-eyebrow">Phase 03</div>
+          <h3>Balance</h3>
+          <div class="pc-window">Days 15&ndash;28 &middot; energy is up and down</div>
+        </div>
+        <div class="phase-card-body">
+          <div class="pc-stat"><span>How you'll feel</span><span>Up and down energy</span></div>
+          <div class="pc-stat"><span>Goal</span><span>Keep moving, protect recovery</span></div>
+          <div class="pc-stat"><span>Strength days</span><span>3 &middot; Mon / Wed / Fri</span></div>
+          <ul class="pc-list">
+            <li>Same exercises as Power phase, but about 80% of the weight</li>
+            <li>Slower pace, longer rests, no new max-weight attempts</li>
+            <li>Easy yoga and walks fill the rest of the week &mdash; PMS may show up near the end</li>
+          </ul>
+        </div>
+        <div class="pc-card-foot">Rule: if you're feeling low energy, do a lighter version &mdash; don't skip it completely.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DETAILED SCHEDULE ============ -->
+<section id="schedule" style="background:var(--paper-raised);border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">Step 03 &middot; The actual workouts</p>
+      <h2>Every exercise, every day, made simple</h2>
+      <p class="section-sub">Pick a phase below. Each day starts with a quick warm-up, then the main exercises &mdash; with how many sets and reps, how long to rest, and how long each one takes. Everything you need before you start.</p>
+    </div>
+
+    <div class="schedule-tabs" role="tablist">
+      <button class="schedule-tab active" data-target="sched-period" style="background:var(--period-deep);color:#fff;border-color:transparent;">Period &middot; Days 1&ndash;5</button>
+      <button class="schedule-tab" data-target="sched-power" style="">Power &middot; Days 6&ndash;14</button>
+      <button class="schedule-tab" data-target="sched-balance" style="">Balance &middot; Days 15&ndash;28</button>
+    </div>
+
+    <!-- ===== PERIOD SCHEDULE ===== -->
+    <div class="schedule-panel active" id="sched-period">
+      <div class="rest-strip">
+        <span class="rest-pill"><b>1</b> strength day &mdash; optional</span>
+        <span class="rest-pill">Mon &middot; Tue &middot; Thu &middot; Sat &mdash; walk, yoga, stretch (light)</span>
+        <span class="rest-pill">Wed &middot; Sun &mdash; full rest</span>
+      </div>
+
+      <div class="day-block">
+        <div class="day-block-head" style="background:var(--period-deep);">
+          <div class="dh-left">
+            <h4>Friday</h4>
+            <span class="dh-focus">Light Strength &mdash; optional</span>
+          </div>
+          <span class="dh-time">~25 min total</span>
+        </div>
+
+        <div class="warmup-strip">
+          <p class="ws-label">Warm-up &middot; ~5 min, do this first</p>
+          <div class="warmup-grid">
+            <div class="warmup-row"><span>Arm Circles</span><span class="wr-time">20 sec each way</span><span>Keep shoulders relaxed</span></div>
+            <div class="warmup-row"><span>Cat&ndash;Cow Stretch</span><span class="wr-time">8&ndash;10 reps</span><span>Slow, controlled breathing</span></div>
+            <div class="warmup-row"><span>Marching in Place</span><span class="wr-time">1 min</span><span>Low impact, easy pace</span></div>
+            <div class="warmup-row"><span>Hip Circles</span><span class="wr-time">10 each way</span><span>Stand, hands on hips</span></div>
+          </div>
+        </div>
+
+        <table class="ex-table">
+          <thead><tr><th>Exercise</th><th>Sets &times; Reps</th><th>Rest</th><th>Time</th></tr></thead>
+          <tbody>
+            <tr><td>Band Shoulder Circles</td><td>2 &times; 15 each way</td><td>20 sec</td><td>3 min</td></tr>
+            <tr><td>Seated Banded Rows</td><td>2 &times; 12</td><td>30 sec</td><td>4 min</td></tr>
+            <tr><td>Standing Band Bicep Curls</td><td>2 &times; 12</td><td>30 sec</td><td>4 min</td></tr>
+            <tr><td>Band Pull-Aparts</td><td>2 &times; 15</td><td>20 sec</td><td>3 min</td></tr>
+            <tr><td>Glute Bridges (bodyweight)</td><td>2 &times; 15</td><td>30 sec</td><td>4 min</td></tr>
+          </tbody>
+        </table>
+        <div class="day-block-foot">Skip the whole day if cramps are bad &mdash; it's meant to be skippable. "Rest" means the pause between sets of the same exercise.</div>
+      </div>
+
+      <p class="section-sub" style="font-size:13.5px;"><b style="color:var(--ink);">Skip this week:</b> heavy squats, deadlifts, hard cardio, and trying to lift your max weight.</p>
+    </div>
+
+    <!-- ===== POWER SCHEDULE ===== -->
+    <div class="schedule-panel" id="sched-power">
+      <div class="rest-strip">
+        <span class="rest-pill"><b>4</b> strength days &mdash; Mon, Tue, Thu, Fri</span>
+        <span class="rest-pill">Wed &middot; Sun &mdash; rest</span>
+        <span class="rest-pill">Sat &mdash; moderate cardio, 30 min</span>
+      </div>
+
+      <div class="day-block">
+        <div class="day-block-head" style="background:var(--power-deep);">
+          <div class="dh-left"><h4>Monday</h4><span class="dh-focus">Lower Body Strength</span></div>
+          <span class="dh-time">~47 min total</span>
+        </div>
+        <div class="warmup-strip">
+          <p class="ws-label">Warm-up &middot; ~7 min, do this first</p>
+          <div class="warmup-grid">
+            <div class="warmup-row"><span>Jumping Jacks / March in Place</span><span class="wr-time">1 min</span><span>Raise heart rate gradually</span></div>
+            <div class="warmup-row"><span>Bodyweight Squats</span><span class="wr-time">10 reps</span><span>Full range, controlled tempo</span></div>
+            <div class="warmup-row"><span>Walking Lunges</span><span class="wr-time">8 each leg</span><span>Activates glutes &amp; quads</span></div>
+            <div class="warmup-row"><span>Hip Hinge Drill</span><span class="wr-time">10 reps</span><span>Pattern before loading the lift</span></div>
+          </div>
+        </div>
+        <table class="ex-table">
+          <thead><tr><th>Exercise</th><th>Sets &times; Reps</th><th>Rest</th><th>Time</th></tr></thead>
+          <tbody>
+            <tr><td>Goblet Squat</td><td>3 &times; 10</td><td>90 sec</td><td>7 min</td></tr>
+            <tr><td>Romanian Deadlift (DB)</td><td>3 &times; 10</td><td>90 sec</td><td>7 min</td></tr>
+            <tr><td>Leg Press</td><td>3 &times; 12</td><td>75 sec</td><td>6 min</td></tr>
+            <tr><td>Walking Lunges</td><td>2 &times; 12 each leg</td><td>60 sec</td><td>6 min</td></tr>
+            <tr><td>Calf Raises</td><td>3 &times; 15</td><td>45 sec</td><td>5 min</td></tr>
+          </tbody>
+        </table>
+        <div class="day-block-foot">This includes your warm-up and cooldown time.</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-block-head" style="background:var(--power-deep);">
+          <div class="dh-left"><h4>Tuesday</h4><span class="dh-focus">Upper Body Push &amp; Pull</span></div>
+          <span class="dh-time">~42 min total</span>
+        </div>
+        <div class="warmup-strip">
+          <p class="ws-label">Warm-up &middot; ~7 min, do this first</p>
+          <div class="warmup-grid">
+            <div class="warmup-row"><span>Jumping Jacks / March in Place</span><span class="wr-time">1 min</span><span>Raise heart rate gradually</span></div>
+            <div class="warmup-row"><span>Arm Circles + Band Pull-Aparts</span><span class="wr-time">10 each</span><span>Primes shoulders for pressing/pulling</span></div>
+            <div class="warmup-row"><span>Bodyweight Squats</span><span class="wr-time">10 reps</span><span>Full range, controlled tempo</span></div>
+          </div>
+        </div>
+        <table class="ex-table">
+          <thead><tr><th>Exercise</th><th>Sets &times; Reps</th><th>Rest</th><th>Time</th></tr></thead>
+          <tbody>
+            <tr><td>DB Shoulder Press</td><td>3 &times; 10</td><td>75 sec</td><td>6 min</td></tr>
+            <tr><td>Lat Pulldown</td><td>3 &times; 10</td><td>75 sec</td><td>6 min</td></tr>
+            <tr><td>DB Bent-Over Rows</td><td>3 &times; 10</td><td>75 sec</td><td>6 min</td></tr>
+            <tr><td>Push-Ups</td><td>3 &times; 8&ndash;12</td><td>60 sec</td><td>5 min</td></tr>
+            <tr><td>Band Face Pulls</td><td>2 &times; 15</td><td>45 sec</td><td>4 min</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="day-block">
+        <div class="day-block-head" style="background:var(--power-deep);">
+          <div class="dh-left"><h4>Thursday</h4><span class="dh-focus">Glutes &amp; Core</span></div>
+          <span class="dh-time">~47 min total</span>
+        </div>
+        <div class="warmup-strip">
+          <p class="ws-label">Warm-up &middot; ~7 min, do this first</p>
+          <div class="warmup-grid">
+            <div class="warmup-row"><span>Hip Hinge Drill</span><span class="wr-time">10 reps</span><span>Pattern before loading the lift</span></div>
+            <div class="warmup-row"><span>Bodyweight Squats</span><span class="wr-time">10 reps</span><span>Full range, controlled tempo</span></div>
+            <div class="warmup-row"><span>Marching in Place</span><span class="wr-time">1 min</span><span>Raise heart rate gradually</span></div>
+          </div>
+        </div>
+        <table class="ex-table">
+          <thead><tr><th>Exercise</th><th>Sets &times; Reps</th><th>Rest</th><th>Time</th></tr></thead>
+          <tbody>
+            <tr><td>Hip Thrusts</td><td>3 &times; 12</td><td>90 sec</td><td>7 min</td></tr>
+            <tr><td>Sumo Squats</td><td>3 &times; 12</td><td>75 sec</td><td>6 min</td></tr>
+            <tr><td>Side-Lying Leg Abductions</td><td>3 &times; 15 each side</td><td>45 sec</td><td>6 min</td></tr>
+            <tr><td>Plank</td><td>3 &times; 30&ndash;45 sec hold</td><td>45 sec</td><td>5 min</td></tr>
+            <tr><td>Dead Bug</td><td>3 &times; 10 each side</td><td>30 sec</td><td>5 min</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="day-block">
+        <div class="day-block-head" style="background:var(--power-deep);">
+          <div class="dh-left"><h4>Friday</h4><span class="dh-focus">Full Body Compound</span></div>
+          <span class="dh-time">~52 min total</span>
+        </div>
+        <div class="warmup-strip">
+          <p class="ws-label">Warm-up &middot; ~8 min, do this first</p>
+          <div class="warmup-grid">
+            <div class="warmup-row"><span>Jumping Jacks / March in Place</span><span class="wr-time">1 min</span><span>Raise heart rate gradually</span></div>
+            <div class="warmup-row"><span>Bodyweight Squats</span><span class="wr-time">10 reps</span><span>Full range, controlled tempo</span></div>
+            <div class="warmup-row"><span>Walking Lunges</span><span class="wr-time">8 each leg</span><span>Activates glutes &amp; quads</span></div>
+            <div class="warmup-row"><span>Arm Circles + Band Pull-Aparts</span><span class="wr-time">10 each</span><span>Primes shoulders for pressing/pulling</span></div>
+            <div class="warmup-row"><span>Hip Hinge Drill</span><span class="wr-time">10 reps</span><span>Pattern before loading the lift</span></div>
+          </div>
+        </div>
+        <table class="ex-table">
+          <thead><tr><th>Exercise</th><th>Sets &times; Reps</th><th>Rest</th><th>Time</th></tr></thead>
+          <tbody>
+            <tr><td>Squat (BB or DB)</td><td>3 &times; 10</td><td>2 min</td><td>9 min</td></tr>
+            <tr><td>Bench / DB Floor Press</td><td>3 &times; 10</td><td>90 sec</td><td>7 min</td></tr>
+            <tr><td>DB Romanian Deadlift</td><td>3 &times; 10</td><td>90 sec</td><td>7 min</td></tr>
+            <tr><td>Assisted Pull-Up / Lat Pulldown</td><td>3 &times; 8&ndash;10</td><td>90 sec</td><td>7 min</td></tr>
+            <tr><td>Plank to Push-Up</td><td>2 &times; 10</td><td>60 sec</td><td>5 min</td></tr>
+          </tbody>
+        </table>
+        <div class="day-block-foot">This week: try lifting a bit heavier than last time &middot; write down your weights &middot; always keep good form.</div>
+      </div>
+    </div>
+
+    <!-- ===== BALANCE SCHEDULE ===== -->
+    <div class="schedule-panel" id="sched-balance">
+      <div class="rest-strip">
+        <span class="rest-pill"><b>3</b> strength days &mdash; Mon, Wed, Fri</span>
+        <span class="rest-pill">Tue &middot; Sun &mdash; rest</span>
+        <span class="rest-pill">Thu &mdash; easy walk, 20&ndash;25 min</span>
+        <span class="rest-pill">Sat &mdash; restorative yoga, 20&ndash;30 min</span>
+      </div>
+
+      <div class="day-block">
+        <div class="day-block-head" style="background:var(--balance-deep);">
+          <div class="dh-left"><h4>Monday</h4><span class="dh-focus">Lower Body, Reduced Load</span></div>
+          <span class="dh-time">~40 min total</span>
+        </div>
+        <div class="warmup-strip">
+          <p class="ws-label">Warm-up &middot; ~6 min, do this first</p>
+          <div class="warmup-grid">
+            <div class="warmup-row"><span>Marching in Place</span><span class="wr-time">1 min</span><span>Easy, low-impact pace</span></div>
+            <div class="warmup-row"><span>Bodyweight Squats</span><span class="wr-time">8 reps</span><span>Slow tempo, no rush</span></div>
+            <div class="warmup-row"><span>Cat&ndash;Cow Stretch</span><span class="wr-time">8 reps</span><span>Mobilize the spine gently</span></div>
+          </div>
+        </div>
+        <table class="ex-table">
+          <thead><tr><th>Exercise</th><th>Sets &times; Reps</th><th>Rest</th><th>Time</th></tr></thead>
+          <tbody>
+            <tr><td>Squat @ 80% usual load</td><td>3 &times; 10</td><td>2 min</td><td>9 min</td></tr>
+            <tr><td>Leg Press / Goblet Squat</td><td>3 &times; 12</td><td>90 sec</td><td>7 min</td></tr>
+            <tr><td>Lunges</td><td>2 &times; 10 each leg</td><td>75 sec</td><td>6 min</td></tr>
+          </tbody>
+        </table>
+        <div class="day-block-foot">Rest a bit longer between exercises too &mdash; extra recovery is the whole point this week.</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-block-head" style="background:var(--balance-deep);">
+          <div class="dh-left"><h4>Wednesday</h4><span class="dh-focus">Upper Body, Slow Tempo</span></div>
+          <span class="dh-time">~35 min total</span>
+        </div>
+        <div class="warmup-strip">
+          <p class="ws-label">Warm-up &middot; ~6 min, do this first</p>
+          <div class="warmup-grid">
+            <div class="warmup-row"><span>Arm Circles</span><span class="wr-time">20 sec each way</span><span>Light shoulder activation</span></div>
+            <div class="warmup-row"><span>Cat&ndash;Cow Stretch</span><span class="wr-time">8 reps</span><span>Mobilize the spine gently</span></div>
+            <div class="warmup-row"><span>Marching in Place</span><span class="wr-time">1 min</span><span>Easy, low-impact pace</span></div>
+          </div>
+        </div>
+        <table class="ex-table">
+          <thead><tr><th>Exercise</th><th>Sets &times; Reps</th><th>Rest</th><th>Time</th></tr></thead>
+          <tbody>
+            <tr><td>DB Rows (3 sec down, 1 sec up)</td><td>3 &times; 10</td><td>75 sec</td><td>6 min</td></tr>
+            <tr><td>Shoulder Press, slow tempo</td><td>3 &times; 10</td><td>75 sec</td><td>6 min</td></tr>
+            <tr><td>Tricep Dips</td><td>3 &times; 10</td><td>60 sec</td><td>5 min</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="day-block">
+        <div class="day-block-head" style="background:var(--balance-deep);">
+          <div class="dh-left"><h4>Friday</h4><span class="dh-focus">Full Body, Light Circuit</span></div>
+          <span class="dh-time">~35 min total</span>
+        </div>
+        <div class="warmup-strip">
+          <p class="ws-label">Warm-up &middot; ~6 min, do this first</p>
+          <div class="warmup-grid">
+            <div class="warmup-row"><span>Marching in Place</span><span class="wr-time">1 min</span><span>Easy, low-impact pace</span></div>
+            <div class="warmup-row"><span>Bodyweight Squats</span><span class="wr-time">8 reps</span><span>Slow tempo, no rush</span></div>
+            <div class="warmup-row"><span>Arm Circles</span><span class="wr-time">20 sec each way</span><span>Light shoulder activation</span></div>
+          </div>
+        </div>
+        <table class="ex-table">
+          <thead><tr><th>Exercise</th><th>Sets &times; Reps</th><th>Rest</th><th>Time</th></tr></thead>
+          <tbody>
+            <tr><td>Circuit: Squat + Band Row + Hip Hinge + Push-Up</td><td>2 rounds &times; 12 each</td><td>90 sec between rounds</td><td>~20 min</td></tr>
+          </tbody>
+        </table>
+        <div class="day-block-foot">This week: no max-weight attempts &middot; focus on good form, not heavy weight &middot; warm up for 10 minutes first.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CLINICAL NOTE ============ -->
+<section class="clinical-note">
+  <div class="wrap">
+    <blockquote>&ldquo;No two cycles are exactly the same &mdash; and that's completely normal.&rdquo;</blockquote>
+    <cite>A reminder doctors have repeated for nearly 100 years</cite>
+  </div>
+</section>
+
+<!-- ============ WHY ============ -->
+<section class="why-panel" id="why">
+  <div class="wrap why-grid">
+    <div>
+      <p class="kicker">Being honest with you</p>
+      <h2>What we know for sure, and what's still unclear</h2>
+      <p class="section-sub">Cycle training is popular right now, and the hormone changes below are well known and proven. What's still being studied is whether matching your training to your cycle actually makes you stronger. We'd rather tell you the truth than oversell it.</p>
+    </div>
+    <div>
+      <div class="why-list">
+        <div class="why-item">
+          <span class="why-num">01</span>
+          <div>
+            <h4>The hormone changes are real</h4>
+            <p>Your hormones really do rise and fall the way the wheel above shows. That part is well established, not a guess.</p>
+          </div>
+        </div>
+        <div class="why-item">
+          <span class="why-num">02</span>
+          <div>
+            <h4>The link to performance is still being studied</h4>
+            <p>So far, research hasn't found solid proof that your cycle phase changes how strong you can get. Some studies show a small edge at certain times; others find no difference.</p>
+          </div>
+        </div>
+        <div class="why-item">
+          <span class="why-num">03</span>
+          <div>
+            <h4>So why bother with phases at all?</h4>
+            <p>Because how you feel is real, even when the research is mixed. Cramping, low energy, and PMS are things many women genuinely deal with. This plan is built around how you're likely to feel &mdash; and that's reason enough.</p>
+          </div>
+        </div>
+        <div class="why-item">
+          <span class="why-num">04</span>
+          <div>
+            <h4>Your cycle won't match this exactly, and that's okay</h4>
+            <p>Most cycles run between 21 and 35 days, with 28 being the average. Your own cycle can even shift slightly from month to month. Treat every date on this page as a helpful guess, not an exact answer.</p>
+          </div>
+        </div>
+      </div>
+      <div class="citebox">
+        The hormone timing on this page is based on cycle research used in patient education and in published studies on exercise and the menstrual cycle. This page is for general guidance only and doesn't replace advice from your doctor &mdash; especially if your periods are irregular, missing, or unusually painful.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta-band">
+  <div class="wrap cta-inner">
+    <div>
+      <h3>Want the full plan written out?</h3>
+      <p>Every exercise, set, rep, rest time, and warm-up for all three phases, in one simple reference you can print.</p>
+    </div>
+    <a href="#tracker" class="btn btn-primary">Re-check my phase</a>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="brand" style="font-size:16px;">Cycle&amp;Strength <span class="rx">Rx</span></div>
+      <div>A simple way to track your cycle and match your training to it.</div>
+    </div>
+    <div class="foot-disclaimer">
+      <b>This is not medical advice.</b> The calculator on this page uses averages to guess where you are in your cycle. It cannot detect ovulation, confirm pregnancy, or diagnose anything. If your periods are irregular, missing, or very painful, or you're trying to get pregnant or avoid it, please talk to your doctor instead of relying on this page. Always stop exercising if something causes sharp pain.
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // ---------- Cycle math ----------
+  // Returns { day, phaseKey, phaseLabel, ovDay, ... }
+  function computePhase(lastPeriodDate, cycleLen, periodLen){
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const lp = new Date(lastPeriodDate);
+    lp.setHours(0,0,0,0);
+
+    let diffDays = Math.floor((today - lp) / (1000*60*60*24));
+    // normalize into current cycle (handle future-dated or multi-cycle-ago input)
+    let cycleDay = ((diffDays % cycleLen) + cycleLen) % cycleLen + 1; // 1-indexed
+
+    const ovDay = Math.max(cycleLen - 14, periodLen + 3); // ovulation ~14 days before next period, never before period ends
+    let phaseKey, phaseLabel, trainingPhase;
+
+    if(cycleDay <= periodLen){
+      phaseKey = 'menstrual'; phaseLabel='Menstrual phase'; trainingPhase='period';
+    } else if(cycleDay < ovDay){
+      phaseKey = 'follicular'; phaseLabel='Follicular phase'; trainingPhase='power';
+    } else if(cycleDay <= ovDay + 1){
+      phaseKey = 'ovulation'; phaseLabel='Ovulation'; trainingPhase='power';
+    } else {
+      phaseKey = 'luteal'; phaseLabel='Luteal phase'; trainingPhase='balance';
+    }
+
+    return {cycleDay, cycleLen, periodLen, ovDay, phaseKey, phaseLabel, trainingPhase};
+  }
+
+  const PHASE_META = {
+    menstrual: {
+      color:'var(--period)', deep:'var(--period-deep)', tint:'var(--period-tint)',
+      desc:'Your energy is at its lowest right now, and you may have cramps. Stick to light, gentle movement &mdash; this is your Period training phase.',
+      estrogen:15, progesterone:10, energy:20,
+      trainingLabel:'Period', trainingHref:'#schedule', scheduleTarget:'sched-period'
+    },
+    follicular: {
+      color:'var(--follicular)', deep:'var(--follicular-deep)', tint:'var(--follicular-tint)',
+      desc:'Your energy is climbing day by day. You are building up toward your strongest training days &mdash; the Power phase.',
+      estrogen:55, progesterone:12, energy:60,
+      trainingLabel:'Power (building)', trainingHref:'#schedule', scheduleTarget:'sched-power'
+    },
+    ovulation: {
+      color:'var(--power)', deep:'var(--power-deep)', tint:'var(--power-tint)',
+      desc:'You are likely at your strongest and most energetic right now. This is the best window for heavy lifting &mdash; full Power phase.',
+      estrogen:95, progesterone:18, energy:90,
+      trainingLabel:'Power (peak)', trainingHref:'#schedule', scheduleTarget:'sched-power'
+    },
+    luteal: {
+      color:'var(--balance)', deep:'var(--balance-deep)', tint:'var(--balance-tint)',
+      desc:'Your energy may feel a bit up and down, especially as your next period gets closer. Time to ease off a little &mdash; this is the Balance phase.',
+      estrogen:40, progesterone:70, energy:50,
+      trainingLabel:'Balance', trainingHref:'#schedule', scheduleTarget:'sched-balance'
+    }
+  };
+
+  function renderResult(res){
+    const card = document.getElementById('resultCard');
+    card.classList.add('active');
+    const meta = PHASE_META[res.phaseKey];
+
+    document.getElementById('resPhaseName').textContent = res.phaseLabel;
+    document.getElementById('resCycleDay').textContent = 'Cycle day ' + res.cycleDay + ' of ~' + res.cycleLen;
+    const tag = document.getElementById('resTag');
+    tag.textContent = res.phaseLabel;
+    tag.style.background = meta.tint;
+    tag.style.color = meta.deep;
+    document.getElementById('resDesc').textContent = meta.desc;
+
+    document.getElementById('barEstrogen').style.width = meta.estrogen + '%';
+    document.getElementById('barProgesterone').style.width = meta.progesterone + '%';
+    document.getElementById('barProgesterone').style.background = meta.color;
+    document.getElementById('barEnergy').style.width = meta.energy + '%';
+
+    document.getElementById('resTrainingPhase').textContent = 'Training phase: ' + meta.trainingLabel;
+    document.getElementById('resLink').href = meta.trainingHref;
+    document.getElementById('resLink').style.color = meta.deep;
+    document.getElementById('resLink').setAttribute('data-schedule-target', meta.scheduleTarget);
+
+    drawMainWheel(res);
+    drawMiniWheel(res);
+    renderUpcoming(res);
+  }
+
+  // ---------- Next 7 days: workout-by-weekday per training phase ----------
+  // 0=Sun, 1=Mon, ... 6=Sat
+  const WEEKDAY_PLAN = {
+    period: {
+      1:{label:'Walk', kind:'rest'}, 2:{label:'Yoga', kind:'rest'}, 3:{label:'Rest', kind:'rest'},
+      4:{label:'Walk', kind:'rest'}, 5:{label:'Light Strength (optional)', kind:'strength'},
+      6:{label:'Stretch', kind:'rest'}, 0:{label:'Rest', kind:'rest'}
+    },
+    power: {
+      1:{label:'Lower Body Strength', kind:'strength'}, 2:{label:'Upper Body Push & Pull', kind:'strength'},
+      3:{label:'Rest', kind:'rest'}, 4:{label:'Glutes & Core', kind:'strength'},
+      5:{label:'Full Body Compound', kind:'strength'}, 6:{label:'Moderate Cardio', kind:'rest'},
+      0:{label:'Rest', kind:'rest'}
+    },
+    balance: {
+      1:{label:'Lower Body, Reduced Load', kind:'strength'}, 2:{label:'Rest', kind:'rest'},
+      3:{label:'Upper Body, Slow Tempo', kind:'strength'}, 4:{label:'Easy Walk', kind:'rest'},
+      5:{label:'Full Body, Light Circuit', kind:'strength'}, 6:{label:'Restorative Yoga', kind:'rest'},
+      0:{label:'Rest', kind:'rest'}
+    }
+  };
+
+  function phaseKeyForCycleDay(cycleDay, cycleLen, periodLen, ovDay){
+    const day = ((cycleDay-1) % cycleLen) + 1;
+    if(day <= periodLen) return {key:'menstrual', training:'period'};
+    if(day < ovDay) return {key:'follicular', training:'power'};
+    if(day <= ovDay+1) return {key:'ovulation', training:'power'};
+    return {key:'luteal', training:'balance'};
+  }
+
+  function renderUpcoming(res){
+    const list = document.getElementById('upcomingList');
+    list.innerHTML = '';
+    const todayCycleDay = res.cycleDay;
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    for(let i=0; i<7; i++){
+      const d = new Date(today);
+      d.setDate(d.getDate()+i);
+      const cycleDayForD = ((todayCycleDay - 1 + i) % res.cycleLen) + 1;
+      const pInfo = phaseKeyForCycleDay(cycleDayForD, res.cycleLen, res.periodLen, res.ovDay);
+      const meta = PHASE_META[pInfo.key];
+      const weekday = d.getDay();
+      const plan = WEEKDAY_PLAN[pInfo.training][weekday];
+
+      const row = document.createElement('div');
+      row.className = 'upcoming-row' + (i===0 ? ' is-today' : '');
+      row.innerHTML = `
+        <span class="u-date">${d.toLocaleDateString('en-US',{month:'short', day:'numeric'})}</span>
+        <span class="u-day">${d.toLocaleDateString('en-US',{weekday:'short'})}</span>
+        <span class="u-workout">${plan.label}</span>
+        <span class="u-tag" style="background:${meta.tint};color:${meta.deep};">${meta.trainingLabel.replace(' (building)','').replace(' (peak)','')}</span>
+      `;
+      list.appendChild(row);
+    }
+  }
+
+  // ---------- Wheel drawing ----------
+  function polarToXY(cx, cy, r, angleDeg){
+    const a = (angleDeg - 90) * Math.PI/180;
+    return [cx + r*Math.cos(a), cy + r*Math.sin(a)];
+  }
+
+  function arcPath(cx, cy, rOuter, rInner, startDeg, endDeg){
+    const [x1,y1] = polarToXY(cx,cy,rOuter,startDeg);
+    const [x2,y2] = polarToXY(cx,cy,rOuter,endDeg);
+    const [x3,y3] = polarToXY(cx,cy,rInner,endDeg);
+    const [x4,y4] = polarToXY(cx,cy,rInner,startDeg);
+    const largeArc = (endDeg-startDeg) > 180 ? 1 : 0;
+    return `M ${x1} ${y1} A ${rOuter} ${rOuter} 0 ${largeArc} 1 ${x2} ${y2} L ${x3} ${y3} A ${rInner} ${rInner} 0 ${largeArc} 0 ${x4} ${y4} Z`;
+  }
+
+  function buildWheelSVG(svgEl, opts){
+    const size = opts.size, cx = size/2, cy = size/2;
+    const rOuter = opts.rOuter, rInner = opts.rInner;
+    const cycleLen = opts.cycleLen, periodLen = opts.periodLen;
+    // Guard against edge-case inputs (e.g. long period + short cycle) where
+    // ovulation would otherwise land inside or before the menstrual segment.
+    const ovDay = Math.max(opts.ovDay, periodLen + 3);
+
+    // segment boundaries as day fractions
+    const segs = [
+      {key:'menstrual', start:1, end:periodLen+1, color:'var(--period)'},
+      {key:'follicular', start:periodLen+1, end:ovDay, color:'var(--follicular)'},
+      {key:'ovulation', start:ovDay, end:ovDay+2, color:'var(--power)'},
+      {key:'luteal', start:ovDay+2, end:cycleLen+1, color:'var(--balance)'},
+    ];
+
+    let svg = '';
+    segs.forEach(s=>{
+      const startDeg = (s.start-1)/cycleLen*360;
+      const endDeg = (s.end-1)/cycleLen*360;
+      svg += `<path d="${arcPath(cx,cy,rOuter,rInner,startDeg,endDeg)}" fill="${s.color}" opacity="0.92"></path>`;
+    });
+
+    // day tick marks
+    for(let d=1; d<=cycleLen; d++){
+      const deg = (d-1)/cycleLen*360;
+      const [x1,y1] = polarToXY(cx,cy,rOuter+2,deg);
+      const [x2,y2] = polarToXY(cx,cy,rOuter+ (d%7===1 ? 10 : 6),deg);
+      svg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--ink-soft)" stroke-width="${d%7===1?1.4:0.8}"></line>`;
+    }
+
+    // today marker
+    if(opts.todayDay){
+      const deg = (opts.todayDay-1)/cycleLen*360;
+      const rMark = (rOuter+rInner)/2;
+      const [mx,my] = polarToXY(cx,cy,rMark,deg);
+      svg += `<circle cx="${mx}" cy="${my}" r="${opts.markerR}" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.4"></circle>`;
+      svg += `<circle cx="${mx}" cy="${my}" r="${opts.markerR*0.4}" fill="var(--ink)"></circle>`;
+    }
+
+    // inner circle (paper hole) for center label space
+    svg += `<circle cx="${cx}" cy="${cy}" r="${rInner-4}" fill="var(--paper-raised)"></circle>`;
+
+    svgEl.innerHTML = svg;
+  }
+
+  function drawMainWheel(res){
+    const svg = document.getElementById('mainWheel');
+    buildWheelSVG(svg, {
+      size:420, rOuter:200, rInner:128,
+      cycleLen:res.cycleLen, periodLen:res.periodLen, ovDay:res.ovDay,
+      todayDay:res.cycleDay, markerR:9
+    });
+  }
+
+  function drawMiniWheel(res){
+    const svg = document.getElementById('heroMiniWheel');
+    buildWheelSVG(svg, {
+      size:240, rOuter:108, rInner:66,
+      cycleLen:res.cycleLen, periodLen:res.periodLen, ovDay:res.ovDay,
+      todayDay:res.cycleDay, markerR:6
+    });
+    document.getElementById('heroMiniDay').textContent = 'Day ' + res.cycleDay;
+  }
+
+  // ---------- Wire up controls ----------
+  const cycleLenInput = document.getElementById('cycleLength');
+  const periodLenInput = document.getElementById('periodLength');
+  const lastPeriodInput = document.getElementById('lastPeriod');
+
+  cycleLenInput.addEventListener('input', ()=>{
+    document.getElementById('cycleLengthVal').textContent = cycleLenInput.value;
+  });
+  periodLenInput.addEventListener('input', ()=>{
+    document.getElementById('periodLengthVal').textContent = periodLenInput.value;
+  });
+
+  function runCalc(){
+    if(!lastPeriodInput.value){
+      lastPeriodInput.focus();
+      return;
+    }
+    const res = computePhase(
+      lastPeriodInput.value,
+      parseInt(cycleLenInput.value,10),
+      parseInt(periodLenInput.value,10)
+    );
+    renderResult(res);
+  }
+
+  document.getElementById('calcBtn').addEventListener('click', runCalc);
+  lastPeriodInput.addEventListener('change', runCalc);
+
+  // ---------- Schedule tabs ----------
+  const TAB_COLORS = {
+    'sched-period': 'var(--period-deep)',
+    'sched-power': 'var(--power-deep)',
+    'sched-balance': 'var(--balance-deep)'
+  };
+
+  function activateScheduleTab(target){
+    document.querySelectorAll('.schedule-tab').forEach(t=>{
+      t.classList.remove('active');
+      t.style.background = '';
+      t.style.color = '';
+      t.style.borderColor = '';
+    });
+    const matchingTab = document.querySelector(`.schedule-tab[data-target="${target}"]`);
+    if(matchingTab){
+      matchingTab.classList.add('active');
+      matchingTab.style.background = TAB_COLORS[target];
+      matchingTab.style.color = '#fff';
+      matchingTab.style.borderColor = 'transparent';
+    }
+
+    document.querySelectorAll('.schedule-panel').forEach(p=>p.classList.remove('active'));
+    const matchingPanel = document.getElementById(target);
+    if(matchingPanel) matchingPanel.classList.add('active');
+  }
+
+  document.querySelectorAll('.schedule-tab').forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      activateScheduleTab(tab.getAttribute('data-target'));
+    });
+  });
+
+  // "View this phase's plan" should open the schedule tab matching the calculated phase
+  document.getElementById('resLink').addEventListener('click', (e)=>{
+    const target = e.currentTarget.getAttribute('data-schedule-target');
+    if(target) activateScheduleTab(target);
+  });
+
+  // ---------- Default state on load: neutral 28-day wheel, day 1, no date assumed ----------
+  const initRes = computePhase(new Date(), 28, 5);
+  drawMainWheel(initRes);
+  drawMiniWheel(initRes);
+  document.getElementById('heroMiniDay').textContent = 'Day 1 of 28 (example)';
+  renderUpcoming(initRes);
+})();
+</script>
+
+</body>
+</html>
